@@ -6,9 +6,19 @@
     <title>Inclusive Job Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
+        }
+        .job-card {
+            display: flex;
+            align-items: center;
+        }
+        .job-icon {
+            font-size: 3rem;
+            margin-right: 16px;
+            color: #4C97FF;
         }
     </style>
 </head>
@@ -20,6 +30,7 @@
         </nav>
     </header>
 
+
     <!-- Job Listings Section -->
     <section class="py-16">
         <div class="container mx-auto px-4">
@@ -30,6 +41,7 @@
         </div>
     </section>
 
+
     <!-- Footer -->
     <footer class="bg-gray-800 text-white py-8 mt-auto">
         <div class="container mx-auto px-4 text-center">
@@ -37,38 +49,79 @@
         </div>
     </footer>
 
-    <!-- JavaScript -->
-    <script>
-        const jobs = [
-            { title: "Software Engineer", description: "Develop and maintain software solutions using Python and Java.", targetGroup: ["Normal", "Mobility Issues"], link: "https://example.com/software", company: "TechWorld Inc.", location: "Remote" },
-            { title: "Data Scientist", description: "Analyze data to derive insights and build predictive models.", targetGroup: ["Normal"], link: "https://example.com/data-sci", company: "DataViz Corp.", location: "New York, USA" },
-            { title: "Accessibility Tester", description: "Test and improve website accessibility for compliance with WCAG standards.", targetGroup: ["Blind", "Mobility Issues"], link: "https://example.com/access-test", company: "Inclusive Web", location: "Remote" },
-            { title: "Customer Support Executive", description: "Provide customer support via chat and email.", targetGroup: ["Normal", "Hearing Impaired"], link: "https://example.com/support", company: "HelpConnect", location: "Delhi" },
-            { title: "Content Writer", description: "Write engaging content for blogs, articles, and social media platforms.", targetGroup: ["Normal", "Blind"], link: "https://example.com/content", company: "CreativeThink", location: "Remote" },
-            { title: "Graphic Designer", description: "Design visual content using tools like Adobe Photoshop and Illustrator.", targetGroup: ["Normal", "Mobility Issues"], link: "https://example.com/design", company: "PixelCraft", location: "London, UK" },
-            { title: "Digital Marketer", description: "Plan and execute marketing campaigns using SEO and social media platforms.", targetGroup: ["Normal", "Visually Impaired"], link: "https://example.com/marketing", company: "MarketMania", location: "Remote" },
-        ];
 
-        function displayJobs() {
+    <!-- JavaScript -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, where, orderBy } 
+        from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD5SWLYarBZsy-GQNqNWaOEGvwCgU5C6Ns",
+            authDomain: "skillsync-8da60.firebaseapp.com",
+            projectId: "skillsync-8da60",
+            storageBucket: "skillsync-8da60.firebasestorage.app",
+            messagingSenderId: "1004601660354",
+            appId: "1:1004601660354:web:0de9a095c56e5940f93c5b",
+            measurementId: "G-73RXN0WS7X"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function displayJobs() {
             const jobList = document.getElementById('jobList');
             jobList.innerHTML = '';
 
-            jobs.forEach(job => {
-                jobList.innerHTML += `
-                    <div class="bg-white p-6 rounded-lg shadow-lg text-left">
-                        <h2 class="text-2xl font-semibold text-blue-600">${job.title}</h2>
-                        <p class="text-gray-700 mb-2">${job.description}</p>
-                        <p class="text-gray-600"><strong>Target Group:</strong> ${job.targetGroup.join(', ')}</p>
-                        <p class="text-gray-600"><strong>Company:</strong> ${job.company}</p>
-                        <p class="text-gray-600"><strong>Location:</strong> ${job.location}</p>
-                        <a href="${job.link}" target="_blank" class="block mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg text-center hover:bg-blue-700">Apply Now</a>
-                    </div>
-                `;
-            });
+            try {
+                const jobsQuery = query(
+                    collection(db, "jobs"),
+                    where("status", "==", "active"),
+                    orderBy("postedAt", "desc")
+                );
+
+                const snapshot = await getDocs(jobsQuery);
+                
+                snapshot.forEach(doc => {
+                    const job = doc.data();
+                    jobList.innerHTML += `
+                        <div class="bg-white p-6 rounded-lg shadow-lg text-left">
+                            <div class="job-card">
+                                <i class="${job.icon || 'fas fa-briefcase'} job-icon"></i>
+                                <div>
+                                    <h2 class="text-2xl font-semibold text-blue-600">${job.jobTitle || job.title}</h2>
+                                    <p class="text-gray-700 mb-2">${job.jobDescription || job.description}</p>
+                                    <p class="text-gray-600"><strong>Suitable for:</strong> ${job.suitableFor.join(', ')}</p>
+                                    <p class="text-gray-600"><strong>Company:</strong> ${job.companyName}</p>
+                                    <p class="text-gray-600"><strong>Location:</strong> ${job.location}</p>
+                                    <p class="text-gray-600"><strong>Salary:</strong> ${job.salary}</p>
+                                    <p class="text-gray-600"><strong>Qualifications:</strong> ${job.qualifications.join(', ')}</p>
+                                    <button onclick="applyForJob('${doc.id}')" 
+                                            class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                                        Apply Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error("Error fetching jobs:", error);
+                jobList.innerHTML = '<p class="text-red-500 text-center">Error loading jobs. Please try again later.</p>';
+            }
         }
 
-        // Call the function to display jobs on page load
+        // Call displayJobs when page loads
         displayJobs();
+
+        // Make applyForJob function available globally
+        window.applyForJob = function(jobId) {
+            // Implement job application logic here
+            alert('Application feature coming soon!');
+        };
     </script>
 </body>
 </html>
+
+
+
