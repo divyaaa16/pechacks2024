@@ -8,7 +8,108 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement(
+                {
+                    pageLanguage: 'en',
+                    includedLanguages: 'en,hi,ta,mr',
+                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+                },
+                'google_translate_element'
+            );
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     <style>
+        #google_translate_element {
+            margin: 0 10px;
+            padding-top: 5px;
+        }
+
+        .goog-te-gadget {
+            font-family: 'Montserrat', sans-serif !important;
+        }
+
+        .goog-te-gadget-simple {
+            background-color: transparent !important;
+            border: 1px solid #0b3c74 !important;
+            padding: 8px !important;
+            border-radius: 4px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .goog-te-gadget-simple:hover {
+            background-color: #f8f9fa !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+        }
+
+        .goog-te-menu-value {
+            color: #153355 !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+        }
+
+        .goog-te-menu-value span {
+            color: #103a6b !important;
+        }
+
+        .goog-te-menu-frame {
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important;
+            border-radius: 8px !important;
+        }
+
+        .goog-te-menu2 {
+            border-radius: 8px !important;
+            border: none !important;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important;
+        }
+
+        .goog-te-menu2-item div {
+            padding: 8px 16px !important;
+            font-family: 'Montserrat', sans-serif !important;
+        }
+
+        .goog-te-banner-frame {
+            display: none !important;
+        }
+
+        body {
+            top: 0 !important;
+        }
+
+        header {
+            margin-top: 10px !important;
+        }
+
+        .fixed {
+            top: 10px !important;
+        }
+
+        .container {
+            margin-top: 10px;
+        }
+
+        .items-center {
+            padding-top: 5px;
+        }
+    </style>
+    <script type="module">
+        import { loadGoogleTranslate, applyStoredLanguage } from './js/translation.js';
+        
+        // Make loadGoogleTranslate available globally
+        window.googleTranslateElementInit = loadGoogleTranslate;
+        
+        // Apply stored language preference when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(applyStoredLanguage, 1000); // Small delay to ensure Google Translate is loaded
+        });
+    </script>
+    <style>
+
 
 :root {
     /* Light theme variables */
@@ -18,6 +119,8 @@
     --nav-bg: #f8f9fa;
     --border: #dee2e6;
 }
+
+
 
 
 [data-theme="dark"] {
@@ -30,14 +133,14 @@
 }
 
 
+
+
 /* Apply variables */
 body {
     background-color: var(--background);
     color: var(--text);
     transition: all 0.3s ease;
 }
-
-
 
 .card {
     background-color: var(--card-bg);
@@ -49,7 +152,6 @@ nav {
     background-color: var(--nav-bg);
 }
 
-
 .highContrastMode {
     --background: #000000;
     --text: #ffffff;
@@ -58,15 +160,17 @@ nav {
     --border: #ffffff;
 }
 
+
 .largeText {
     font-size: 1.5em;
 }
+
 
         body {
             font-family: 'Montserrat', sans-serif;
         }
         .wave-bg {
-            background: linear-gradient(135deg, #003366 0%, #004080 100%);
+            background: linear-gradient(135deg, #062f58 0%, #004080 100%);
             position: relative;
             overflow: hidden;
         }
@@ -95,6 +199,9 @@ nav {
 
 
 
+
+
+
          #google_translate_element{
             width: 200px;
             height: 40px;
@@ -104,9 +211,12 @@ nav {
             text-align: center;
          }
 
+
          .highContrastMode {
             /* background-color: black;
             color: white; */
+
+
 
 
             background: #000000;
@@ -117,13 +227,18 @@ nav {
         }
 
 
+
+
         .largeText {
             font-size: 1.5em;
         }
 #HeroSection{
     margin-top: 100px;
 }
-      
+#contact{
+    margin-top: 5px;
+}
+     
     </style>
 </head>
 <body>
@@ -131,8 +246,9 @@ nav {
      <!-- Header -->
 <!-- Header -->
 
+
     <div id="translator">
-        <header class="bg-white shadow-md fixed top-0 left-0 w-full z-50" id="head">
+        <header class="bg-white shadow-md fixed top-0 left-0 w-full z-50 mt-2" id="head">
             <nav class="container mx-auto px-4 py-3 flex items-center justify-between">
                 <div class="flex items-center">
                     <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='50'%3E%3Ctext x='10' y='35' font-family='Arial' font-size='32' font-weight='bold' fill='%23FF5722'%3ESkillSync%3C/text%3E%3C/svg%3E" alt="SkillSync Logo" class="h-16">
@@ -143,8 +259,8 @@ nav {
                     <a href="#about" class="text-gray-600 hover:text-blue-600" id="navTraining" data-i18n="navTraining">About Us</a>
                     <a href="#Explore" class="text-gray-600 hover:text-blue-600" id="navResources" data-i18n="navResources">Explore</a>
                     <a href="profile.html" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600" id="navProfile" data-i18n="navProfile">Profile</a>
-                    <button @click="showLoginModal = true" class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600" id="navLogin" data-i18n="navLogin">Login</button>
-                    <button @click="showRegisterModal = true" class="bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600" id="navRegister" data-i18n="navRegister">Register</button>
+                    <button @click="login" class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600" id="navLogin" data-i18n="navLogin">Login</button>
+                    <button @click="register" class="bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600" id="navRegister" data-i18n="navRegister">Register</button>
                     <button @click="accessOn = true" class="bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600" id="navRegister" data-i18n="navRegister">Accessibility</button>
                     <div id="google_translate_element"></div>
                 </div>
@@ -170,6 +286,7 @@ nav {
                         </div>
                     </div>
                 </div>
+
                 <!-- Mobile Menu -->
                 <div v-if="mobileMenu" class="md:hidden bg-white border-t">
                     <div class="container mx-auto px-4 py-2 flex flex-col space-y-2">
@@ -177,20 +294,21 @@ nav {
                         <a href="#" class="text-gray-600 py-2" id="mobileNavJobs" data-i18n="mobileNavJobs">Contact Us</a>
                         <a href="#" class="text-gray-600 py-2" id="mobileNavTraining" data-i18n="mobileNavTraining">About Us</a>
                         <a href="#Explore" class="text-gray-600 py-2" id="mobileNavResources" data-i18n="mobileNavResources">Explore</a>
-                        <button @click="showLoginModal = true" class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 w-full" id="mobileNavLogin" data-i18n="mobileNavLogin">Login</button>
-                        <button @click="showRegisterModal = true" class="bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600 w-full" id="mobileNavRegister" data-i18n="mobileNavRegister">Register</button>
+                        <button @click="login" class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 w-full" id="mobileNavLogin" data-i18n="mobileNavLogin">Login</button>
+                        <button @click="register" class="bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600 w-full" id="mobileNavRegister" data-i18n="mobileNavRegister">Register</button>
                     </div>
                 </div>
             </nav>
         </header>
-        
+       
                    <!-- Hero Section -->
-    <section class="wave-bg text-white py-16 bg-gradient-to-r from-blue-500 to-purple-500" id="HeroSection">
+    <section class="wave-bg text-white py-16 bg-gradient-to-r from-blue-950 to-purple-900" id="HeroSection">
         <div class="container mx-auto px-4">
             <div class="max-w-3xl mx-auto text-center mb-12">
                 <h1 class="text-4xl md:text-5xl font-bold mb-6">Empowering Potential: An Inclusive Job
                     Platform for People with Disabilities</h1>
                 <p class="text-xl mb-8">for Persons with Disabilities</p>
+
 
                 <!-- Job Search Form -->
                 <div class="bg-white rounded-lg p-4 shadow-lg">
@@ -352,6 +470,10 @@ nav {
 
 
 
+
+
+
+
                 <!-- Template -->
                 <div v-if="accessOn" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
                     <div class="bg-white rounded-lg p-6 max-w-md w-full">
@@ -377,6 +499,9 @@ nav {
                         </div>
                     </div>
                 </div>
+
+
+
 
 
 
@@ -413,6 +538,8 @@ nav {
                                 </ul> -->
 
 
+
+
                                 <ul class="space-y-2">
                                     <li class="text-gray-400">
                                       <i class="bi bi-envelope mr-2"></i>
@@ -440,18 +567,24 @@ nav {
                             </div>
                         </div>
                         <div class="border-t border-gray-700 mt-8 pt-8 text-center">
-                            <p class="text-gray-400">	&#9830 Thanks For Visiting 	&#9830 </p>
+                            <p class="text-gray-400">   &#9830 Thanks For Visiting  &#9830 </p>
                         </div>
                     </div>
                 </footer>
             </div>
     </div>
 
+
 <!-- -----------------------------------JS-------------------------------- -->
+
 
 <script type="text/javascript" src="http://translate.google.com/translate_a/element.js?cb=loadGoogleTranslate"></script>
 <script type="text/javascript">
         const { createApp } = Vue
+
+
+
+
 
 
 
@@ -486,19 +619,21 @@ nav {
 
 
 
+
+
+
+
             methods: {
                 searchJobs() {
                     // Logic to handle job search based on filters
                 },
                 login() {
-                    // Handle login logic here
-                    console.log('Logging in with:', this.loginForm);
-                    this.showLoginModal = false;
+                    // Instead of showing modal, redirect to login.html
+                    window.location.href = '/login.html';
                 },
                 register() {
-                    // Handle registration logic here
-                    console.log('Registering with:', this.registerForm);
-                    this.showRegisterModal = false;
+                    const modal = document.getElementById('registerOptionModal');
+                    modal.style.display = 'flex';
                 },
                         toggleVoiceControl() {
                 this.voiceControlActive = !this.voiceControlActive;
@@ -524,6 +659,9 @@ nav {
 
 
 
+
+
+
             toggleHighContrast() {
         document.body.classList.toggle('highContrastMode');
         if (document.body.classList.contains('highContrastMode')) {
@@ -546,8 +684,14 @@ nav {
     }
 
 
+
+
             }
         }).mount('#app')
+
+
+
+
 
 
 
@@ -571,6 +715,10 @@ nav {
 
 
 
+
+
+
+
 //hardcode jobs
 const jobs = [
             { title: "Software Engineer", description: "Develop and maintain software solutions using Python and Java.", targetGroup: ["Normal", "Mobility Issues"], link: "https://example.com/software", company: "TechWorld Inc.", location: "Remote" },
@@ -589,11 +737,21 @@ const jobs = [
 
 
 
+
+
+
+
+
+
+
+
         // Function to Filter and Display Jobs
         function searchJobs() {
             const disabilityType = document.getElementById('disabilityType').value;
             const location = document.getElementById('location').value;
             const qualification = document.getElementById('qualification').value;
+
+
 
 
             const filteredJobs = jobs.filter(job =>
@@ -602,8 +760,11 @@ const jobs = [
             );
 
 
+
+
             const jobResults = document.getElementById('jobResults');
             jobResults.innerHTML = '';
+
 
             if (filteredJobs.length === 0) {
                 jobResults.innerHTML = '<p class="text-center text-gray-700">No jobs found matching your criteria.</p>';
@@ -625,20 +786,84 @@ const jobs = [
 
 
 
+
+
+
+
         mounted(); {
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
 }
 
+
     </script>
+
+<!-- Add this modal HTML just before closing body tag -->
+<div id="registerOptionModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full m-4">
+        <h2 class="text-2xl font-bold mb-6 text-center">Choose Registration Type</h2>
+        
+        <div class="space-y-4">
+            <button onclick="handleRegistration('jobseeker')" 
+                    class="w-full p-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition flex items-center justify-center space-x-3">
+                <i class="bi bi-person-badge"></i>
+                <span>Register as Job Seeker</span>
+            </button>
+            
+            <button onclick="handleRegistration('company')" 
+                    class="w-full p-4 bg-green-500 text-white rounded-lg hover:bg-green-600 transition flex items-center justify-center space-x-3">
+                <i class="bi bi-building"></i>
+                <span>Register as Company</span>
+            </button>
+        </div>
+        
+        <button onclick="closeRegisterModal()" 
+                class="mt-6 w-full p-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition">
+            Cancel
+        </button>
+    </div>
+</div>
+
+<!-- Add these styles -->
+<style>
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 90%;
+}
+</style>
+
+<!-- Update the register method in your Vue app -->
+<script>
+function handleRegistration(type) {
+    if (type === 'jobseeker') {
+        window.location.href = '/login.html';
+    } else if (type === 'company') {
+        window.location.href = '/company-register.html';
+    }
+}
+
+function closeRegisterModal() {
+    document.getElementById('registerOptionModal').style.display = 'none';
+}
+</script>
 </body>
 </html>
-
-
-
-
-
-
-
 
 
