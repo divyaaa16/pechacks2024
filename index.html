@@ -19,6 +19,7 @@
                 'google_translate_element'
             );
         }
+        
     </script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     <style>
@@ -96,17 +97,63 @@
         .items-center {
             padding-top: 5px;
         }
+
+        .largeCursor {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="%23000000"><path d="M7 2l12 11.2-5.8.5 3.3 7.3-2.2 1-3.2-7-4.1 4z"/></svg>') 0 0, auto;
+        }
     </style>
     <script type="module">
-        import { loadGoogleTranslate, applyStoredLanguage } from './js/translation.js';
-        
-        // Make loadGoogleTranslate available globally
-        window.googleTranslateElementInit = loadGoogleTranslate;
-        
-        // Apply stored language preference when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(applyStoredLanguage, 1000); // Small delay to ensure Google Translate is loaded
-        });
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } 
+        from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD5SWLYarBZsy-GQNqNWaOEGvwCgU5C6Ns",
+            authDomain: "skillsync-8da60.firebaseapp.com",
+            projectId: "skillsync-8da60",
+            storageBucket: "skillsync-8da60.firebasestorage.app",
+            messagingSenderId: "1004601660354",
+            appId: "1:1004601660354:web:0de9a095c56e5940f93c5b",
+            measurementId: "G-73RXN0WS7X"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Handle feedback form submission
+        const feedbackForm = document.getElementById('feedbackForm');
+        if (feedbackForm) {
+            feedbackForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                try {
+                    // Get form data
+                    const feedbackData = {
+                        name: document.getElementById('feedbackName').value,
+                        email: document.getElementById('feedbackEmail').value,
+                        message: document.getElementById('feedbackMessage').value,
+                        submittedAt: serverTimestamp()
+                    };
+
+                    // Add to Firestore
+                    const docRef = await addDoc(collection(db, "feedback"), feedbackData);
+                    console.log("Feedback submitted with ID: ", docRef.id);
+
+                    // Show success message
+                    alert('Thank you for your feedback!');
+
+                    // Reset form
+                    feedbackForm.reset();
+
+                } catch (error) {
+                    console.error("Error submitting feedback:", error);
+                    alert('Error submitting feedback. Please try again.');
+                }
+            });
+        }
     </script>
     <style>
 
@@ -253,7 +300,7 @@ nav {
                 <div class="flex items-center">
                     <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='50'%3E%3Ctext x='10' y='35' font-family='Arial' font-size='32' font-weight='bold' fill='%23FF5722'%3ESkillSync%3C/text%3E%3C/svg%3E" alt="SkillSync Logo" class="h-16">
                 </div>
-                <div class="hidden md:flex items-center space-x-6">
+                <div class="hidden md:flex items-center space-x-4">
                     <a href="#" class="text-gray-600 hover:text-blue-600" id="navHome" data-i18n="navHome">Home</a>
                     <a href="#contact" class="text-gray-600 hover:text-blue-600" id="navJobs" data-i18n="navJobs">Contact Us</a>
                     <a href="#about" class="text-gray-600 hover:text-blue-600" id="navTraining" data-i18n="navTraining">About Us</a>
@@ -261,7 +308,22 @@ nav {
                     <a href="profile.html" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600" id="navProfile" data-i18n="navProfile">Profile</a>
                     <button @click="login" class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600" id="navLogin" data-i18n="navLogin">Login</button>
                     <button @click="register" class="bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600" id="navRegister" data-i18n="navRegister">Register</button>
-                    <button @click="accessOn = true" class="bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600" id="navRegister" data-i18n="navRegister">Accessibility</button>
+                    <button 
+                        @click="toggleVoiceControl" 
+                        class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2"
+                        :class="{ 'bg-green-500 hover:bg-green-600': voiceControlActive }"
+                        title="Toggle voice control">
+                        <i class="bi" :class="voiceControlActive ? 'bi-mic-fill' : 'bi-mic'"></i>
+                        <span v-if="voiceControlActive" class="text-sm">Active</span>
+                    </button>
+                    <div class="flex items-center space-x-4">
+                        <button @click="accessOn = true" class="bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600">
+                            <i class="bi bi-universal-access"></i> Accessibility
+                        </button>
+                        <button @click="toggleLargeCursor" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center">
+                            <i class="bi bi-cursor-fill mr-2"></i>Large Cursor
+                        </button>
+                    </div>
                     <div id="google_translate_element"></div>
                 </div>
                 <!-- Template for accessibility options -->
@@ -282,6 +344,9 @@ nav {
                             </button>
                             <button @click="toggleLargeText" class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                                 Large Text
+                            </button>
+                            <button @click="toggleLargeCursor" class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                                Large Cursor
                             </button>
                         </div>
                     </div>
@@ -345,6 +410,32 @@ nav {
             <div id="jobResults" class="bg-white rounded-lg p-4 shadow-lg" style="color: Black;"></div>
         </div>
     </section>
+       
+       
+       
+       
+                <!-- Video Section -->
+                <section class="py-16 bg-gray-50">
+                    <div class="container mx-auto px-4">
+                        <h2 class="text-3xl font-bold text-center mb-8">How to Register</h2>
+                        <div class="max-w-4xl mx-auto">
+                            <!-- Video Container with responsive aspect ratio -->
+                            <div class="relative w-full" style="padding-top: 56.25%;">
+                                <video 
+                                    class="absolute top-0 left-0 w-full h-full rounded-lg shadow-lg"
+                                    controls
+                                    poster="path/to/thumbnail.jpg"> <!-- Optional: Add a thumbnail -->
+                                    <source src="registration.mp4" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                            <!-- Optional: Add caption or description -->
+                            <p class="text-center text-gray-600 mt-4">
+                                Watch this quick guide to learn how to register and get started with SkillSync
+                            </p>
+                        </div>
+                    </div>
+                </section>
        
        
        
@@ -496,6 +587,9 @@ nav {
                                     class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                                 Large Text
                             </button>
+                            <button @click="toggleLargeCursor" class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                                Large Cursor
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -519,55 +613,56 @@ nav {
                 </section>
        
                 <!-- Footer -->
-                <footer class="bg-gray-800 text-white py-8 mt-auto" id="contact">
+                <footer class="bg-gray-800 text-white py-12">
                     <div class="container mx-auto px-4">
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <!-- Company Info -->
                             <div>
-                                <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                                <h3 class="text-xl font-semibold mb-4">SkillSync</h3>
+                                <p class="text-gray-400">Empowering careers, connecting opportunities.</p>
+                            </div>
+
+                            <!-- Quick Links -->
+                            <div>
+                                <h3 class="text-xl font-semibold mb-4">Quick Links</h3>
                                 <ul class="space-y-2">
-                                    <li><a href="#" class="text-gray-400 hover:text-white">Find Jobs</a></li>
-                                    <li><a href="#" class="text-gray-400 hover:text-white">Training Programs</a></li>
-                                    <li><a href="#" class="text-gray-400 hover:text-white">Success Stories</a></li>
+                                    <li><a href="#" class="text-gray-400 hover:text-white">Home</a></li>
+                                    <li><a href="#about" class="text-gray-400 hover:text-white">About Us</a></li>
+                                    <li><a href="#contact" class="text-gray-400 hover:text-white">Contact</a></li>
                                 </ul>
                             </div>
+
+                            <!-- Feedback Form -->
                             <div>
-                                <h4 class="text-lg font-semibold mb-4">Contact Us</h4>
-                                <!-- <ul class="space-y-2">
-                                    <li class="text-gray-400"><i class="bi bi-envelope mr-2"></i> support@swarajability.org</li>
-                                    <li class="text-gray-400"><i class="bi bi-telephone mr-2"></i> +91 XXX XXX XXXX</li>
-                                </ul> -->
-
-
-
-
-                                <ul class="space-y-2">
-                                    <li class="text-gray-400">
-                                      <i class="bi bi-envelope mr-2"></i>
-                                      <a href="mailto:support@swarajability.org" class="hover:text-blue-500">
-                                        <!-- support@swarajability.org -->
-                                         shrutithakur130405@gmail.com
-                                      </a>
-                                    </li>
-                                    <li class="text-gray-400">
-                                      <i class="bi bi-telephone mr-2"></i>
-                                      <a href="tel:+91XXXXXXXXXX" class="hover:text-blue-500">
-                                        +91 XXX XXX XXXX
-                                      </a>
-                                    </li>
-                                  </ul>
-                                 
+                                <h3 class="text-xl font-semibold mb-4">Send us your Feedback</h3>
+                                <form id="feedbackForm" class="space-y-4">
+                                    <div>
+                                        <input type="text" 
+                                               id="feedbackName" 
+                                               placeholder="Your Name" 
+                                               required
+                                               class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-blue-500 focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <input type="email" 
+                                               id="feedbackEmail" 
+                                               placeholder="Your Email" 
+                                               required
+                                               class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-blue-500 focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <textarea id="feedbackMessage" 
+                                                placeholder="Your Message" 
+                                                required
+                                                rows="3" 
+                                                class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-blue-500 focus:outline-none"></textarea>
+                                    </div>
+                                    <button type="submit" 
+                                            class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition-colors">
+                                        Send Feedback
+                                    </button>
+                                </form>
                             </div>
-                            <div>
-                                <h4 class="text-lg font-semibold mb-4">Follow Us</h4>
-                                <div class="flex space-x-4">
-                                    <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="bi bi-facebook"></i></a>
-                                    <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="bi bi-twitter"></i></a>
-                                    <a href="https://www.linkedin.com/company/105785358/admin/dashboard/" class="text-gray-400 hover:text-white text-xl"><i class="bi bi-linkedin"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="border-t border-gray-700 mt-8 pt-8 text-center">
-                            <p class="text-gray-400">   &#9830 Thanks For Visiting  &#9830 </p>
                         </div>
                     </div>
                 </footer>
@@ -646,9 +741,28 @@ nav {
                 }
             },
             voiceHandler(event) {
-                const text = event.target.innerText || event.target.alt || 'Unknown element';
-                const utterance = new SpeechSynthesisUtterance(text);
-                speechSynthesis.speak(utterance);
+                const text = event.target.innerText?.toLowerCase() || event.target.alt?.toLowerCase() || '';
+                
+                // Navigation commands
+                if (text.includes('home')) {
+                    window.location.href = '/';
+                } else if (text.includes('contact')) {
+                    window.location.href = '/#contact';
+                } else if (text.includes('about')) {
+                    window.location.href = '/#about';
+                } else if (text.includes('explore')) {
+                    window.location.href = '/#Explore';
+                } else if (text.includes('profile')) {
+                    window.location.href = '/profile.html';
+                } else if (text.includes('login')) {
+                    window.location.href = '/login.html';
+                } else if (text.includes('register')) {
+                    window.location.href = '/register.html';
+                } else {
+                    // Default text-to-speech for other elements
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    speechSynthesis.speak(utterance);
+                }
             },
             // toggleHighContrast() {
             //     document.body.classList.toggle('highContrastMode');
@@ -681,6 +795,9 @@ nav {
             : 'dark';
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem('theme', theme);
+    },
+    toggleLargeCursor() {
+        document.body.classList.toggle('largeCursor');
     }
 
 
@@ -863,26 +980,22 @@ function closeRegisterModal() {
     document.getElementById('registerOptionModal').style.display = 'none';
 }
 </script>
+
+<!-- Voice Controller Icon -->
+<div class="fixed bottom-4 left-4 z-50">
+    <button 
+        @click="toggleVoiceControl" 
+        class="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg flex items-center justify-center"
+        :class="{ 'bg-green-600 hover:bg-green-700': voiceControlActive }"
+        title="Toggle voice control">
+        <i class="bi" :class="voiceControlActive ? 'bi-mic-fill' : 'bi-mic'"></i>
+        <span class="sr-only">Toggle voice control</span>
+    </button>
+    <!-- Voice Status Indicator -->
+    <div v-if="voiceControlActive" 
+         class="absolute -top-12 left-0 bg-green-600 text-white px-3 py-1 rounded-lg text-sm whitespace-nowrap">
+        Voice Control Active
+    </div>
+</div>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
